@@ -19,7 +19,7 @@ const App = () => {
         setPersons(response.data)
       })
   }, [])
-  console.log('render', persons.length, 'notes')
+  console.log('render', persons.length, 'persons')
 
   const addPerson = (event) => {
     event.preventDefault()
