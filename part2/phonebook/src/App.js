@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Content from './components/Content'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
 import PersonForm from './components/PersonForm'
 import personService from './services/persons'
 
@@ -10,6 +11,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -34,9 +36,20 @@ const App = () => {
           .update(updatedPerson.id, updatedPerson).then(returnedPerson => {
             console.log(`${returnedPerson.name} successfully updated`)
             setAllPersons(allPersons.map(personItem => personItem.id !== personObject.id ? personItem : returnedPerson))
+            setMessage(
+              `${personObject.name} was successfully updated`
+            )
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
           })
           .catch(() => {
-            alert(`${personObject.name} was already deleted from server` )
+            setMessage(
+              `${personObject.name} was already deleted from server`
+            )
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
           })
       }
     } else {
@@ -50,6 +63,12 @@ const App = () => {
               setAllPersons(allPersons.concat(returnedPerson))
               setNewName('')
               setNewNumber('')
+              setMessage(
+                `${newName} was successfully added`
+              )
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000)
       })
     }
   }
@@ -72,11 +91,12 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter value={newFilter} onChange={handleFilterChange} />
       <h2>Add new person</h2>
       <PersonForm onSubmit={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-      <Content persons={persons} allPersons={allPersons} setAllPersons={setAllPersons} />
+      <Content persons={persons} allPersons={allPersons} setAllPersons={setAllPersons} setMessage={setMessage}/>
     </div>
   )
 }
