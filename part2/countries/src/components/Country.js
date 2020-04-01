@@ -13,6 +13,7 @@ const Country = ({country}) => {
     axios.get('http://api.weatherstack.com/current', {params})
       .then(response => {
         const apiResponse = response.data;
+        console.log(apiResponse)
         console.log(`Current temperature in ${apiResponse.location.name} is ${apiResponse.current.temperature}℃`);
         setWeather([apiResponse])
       }).catch(error => {
