@@ -1,29 +1,24 @@
 {
   "persons": [
     {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": 2
-    },
-    {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": 4
-    },
-    {
       "name": "Zlatan ibra",
       "number": "46-643-463",
       "id": 5
     },
     {
-      "name": "totoro",
-      "number": "67-674-8656",
-      "id": 6
-    },
-    {
       "name": "ToTorz",
       "number": "56-443-63",
       "id": 7
+    },
+    {
+      "name": "Jean Dujardin",
+      "number": "86-865-8656",
+      "id": 8
+    },
+    {
+      "name": "totoro",
+      "number": "64-635-8375",
+      "id": 9
     }
   ]
 }

@@ -1,13 +1,13 @@
 import React from 'react'
 import Person from './Person'
 
-const Content = ({persons, allPersons, setAllPersons, setMessage}) => {
+const Content = ({persons, allPersons, deletePerson}) => {
   console.log(persons.length)
   if (persons.length === 0) {
     return (
       <ul>
         {allPersons.map((person, i) =>
-          <Person key={i} name={person.name} number={person.number} allPersons={allPersons} setAllPersons={setAllPersons} setMessage={setMessage} />
+          <Person key={i} person={person} deletePerson={deletePerson} />
         )}
       </ul>
     )
@@ -15,7 +15,7 @@ const Content = ({persons, allPersons, setAllPersons, setMessage}) => {
     return (
       <ul>
         {persons.map((person, i) =>
-          <Person key={i} name={person.name} number={person.number} allPersons={allPersons} setAllPersons={setAllPersons} setMessage={setMessage} />
+          <Person key={i} name={person.name} deletePerson={deletePerson} />
         )}
       </ul>
     )

@@ -27,25 +27,30 @@ const App = () => {
         person.name === newName
     )
 
-    const personObject = person[0]
-    const updatedPerson = { ...personObject, number: newNumber }
+    const personToAdd = person[0]
+    const updatedPerson = { ...personToAdd, number: newNumber }
 
     if (person.length !== 0) {
-      if (window.confirm(`${personObject.name} is already added to the phonebook, replace the old number with a new one ?`)) {
+      if (window.confirm(`${personToAdd.name} is already added to the phonebook, replace the old number with a new one ?`)) {
         personService
           .update(updatedPerson.id, updatedPerson).then(returnedPerson => {
             console.log(`${returnedPerson.name} successfully updated`)
-            setAllPersons(allPersons.map(personItem => personItem.id !== personObject.id ? personItem : returnedPerson))
+            setAllPersons(allPersons.map(personItem => personItem.id !== personToAdd.id ? personItem : returnedPerson))
+            setNewName('')
+            setNewNumber('')
             setMessage(
-              `${personObject.name} was successfully updated`
+              `${updatedPerson.name} was successfully updated`
             )
             setTimeout(() => {
               setMessage(null)
             }, 5000)
           })
           .catch(() => {
+            setAllPersons(allPersons.filter(person => person.id !== updatedPerson.id))
+            setNewName('')
+            setNewNumber('')
             setMessage(
-              `${personObject.name} was already deleted from server`
+              `${updatedPerson.name} was already deleted from server`
             )
             setTimeout(() => {
               setMessage(null)
@@ -53,12 +58,12 @@ const App = () => {
           })
       }
     } else {
-        const personObject = {
+        const personToAdd = {
             name: newName,
             number: newNumber
           }
           personService
-            .create(personObject)
+            .create(personToAdd)
             .then(returnedPerson => {
               setAllPersons(allPersons.concat(returnedPerson))
               setNewName('')
@@ -70,6 +75,24 @@ const App = () => {
                 setMessage(null)
               }, 5000)
       })
+    }
+  }
+
+  const deletePerson = (id) => {
+    const filteredPerson = allPersons.filter(person => person.id === id)
+    const personName = filteredPerson[0].name
+    const personId = filteredPerson[0].id
+    if (window.confirm(`Delete ${personName} ?`)) {
+      personService
+        .remove(personId)
+      console.log(`${personName} successfully deleted`)
+      setMessage(
+        `${personName} was successfully deleted`
+      )
+      setAllPersons(allPersons.filter(person => person.id !== personId))
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     }
   }
 
@@ -96,7 +119,7 @@ const App = () => {
       <h2>Add new person</h2>
       <PersonForm onSubmit={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-      <Content persons={persons} allPersons={allPersons} setAllPersons={setAllPersons} setMessage={setMessage}/>
+      <Content persons={persons} allPersons={allPersons} setAllPersons={setAllPersons} deletePerson={deletePerson} />
     </div>
   )
 }
