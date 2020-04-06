@@ -45,7 +45,8 @@ const App = () => {
               setMessage(null)
             }, 5000)
           })
-          .catch(() => {
+          .catch((error) => {
+            console.log(error)
             setAllPersons(allPersons.filter(person => person.id !== updatedPerson.id))
             setNewName('')
             setNewNumber('')
