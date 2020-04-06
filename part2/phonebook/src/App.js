@@ -119,7 +119,7 @@ const App = () => {
       <h2>Add new person</h2>
       <PersonForm onSubmit={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-      <Content persons={persons} allPersons={allPersons} setAllPersons={setAllPersons} deletePerson={deletePerson} />
+      <Content persons={persons} allPersons={allPersons} deletePerson={deletePerson} />
     </div>
   )
 }

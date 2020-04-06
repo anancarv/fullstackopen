@@ -15,7 +15,7 @@ const Content = ({persons, allPersons, deletePerson}) => {
     return (
       <ul>
         {persons.map((person, i) =>
-          <Person key={i} name={person.name} deletePerson={deletePerson} />
+          <Person key={i} person={person} deletePerson={deletePerson} />
         )}
       </ul>
     )
