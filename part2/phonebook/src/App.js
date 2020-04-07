@@ -51,7 +51,7 @@ const App = () => {
             setNewName('')
             setNewNumber('')
             setMessage(
-              `${updatedPerson.name} was already deleted from server`
+              `[ERROR] ${updatedPerson.name} was already deleted from server`
             )
             setTimeout(() => {
               setMessage(null)
@@ -75,7 +75,16 @@ const App = () => {
               setTimeout(() => {
                 setMessage(null)
               }, 5000)
-      })
+            })
+            .catch(error => {
+              setMessage(
+                `[ERROR] ${error.response.data.error}`
+              )
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000)
+              console.log(error.response.data)
+            })
     }
   }
 

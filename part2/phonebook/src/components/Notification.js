@@ -25,7 +25,7 @@ const Notification = ({ message }) => {
       return null
     }
 
-    if (message.includes('was already deleted from server')){
+    if (message.includes('ERROR')){
       return (
         <div style={errorStyle} className="error">
           {message}
