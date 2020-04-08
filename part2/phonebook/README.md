@@ -11,6 +11,8 @@ This initial state of the application is stored in a file `db.json`, which corre
 To start an application, do the following :
 
 ```bash
+# Install dependancies
+$ yarn install
 # Start the JSON Server
 $ npx json-server --port 3001 --watch db.json
 # On another terminal, start the application

@@ -1,0 +1,11 @@
+{
+  "name": "bloglist",
+  "version": "1.0.0",
+  "description": "Blog list application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ananias CARVALHO <carvalhoananias@hotmail.com>",
+  "license": "ISC"
+}

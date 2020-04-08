@@ -12,6 +12,9 @@ While collectif feedbacks, the following statistics are displayed:
 To start an application, do the following :
 
 ```bash
+# Install dependancies
+$ yarn install
+# Start the application
 $ yarn start
 ```
 

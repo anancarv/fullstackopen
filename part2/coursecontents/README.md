@@ -7,6 +7,9 @@ Simple web app for getting used to collections & modules
 To start an application, do the following :
 
 ```bash
+# Install dependancies
+$ yarn install
+# Start the application
 $ yarn start
 ```
 

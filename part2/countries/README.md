@@ -11,6 +11,8 @@ In this application, it is also possible to see the current weather in the count
 To start an application, do the following :
 
 ```bash
+# Install dependancies
+$ yarn install
 # create a .env file and put there the API KEY for retrieving data from https://weatherstack.com/
 $ echo "REACT_APP_API_KEY=<YOUR-API-KEY>" > .env
 # Start the application

@@ -9,6 +9,9 @@ This application allows the user to vote between multiple anecdotes and then dis
 To start an application, do the following :
 
 ```bash
+# Install dependancies
+$ yarn install
+# Start the application
 $ yarn start
 ```
 

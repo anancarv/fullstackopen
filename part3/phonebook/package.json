@@ -9,16 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ."
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/anancarv/phonebook-api.git"
-  },
   "author": "Ananias CARVALHO <carvalhoananias@hotmail.com>",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/anancarv/phonebook-api/issues"
-  },
-  "homepage": "https://github.com/anancarv/phonebook-api#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
