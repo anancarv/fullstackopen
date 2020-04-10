@@ -1,5 +1,6 @@
 const config = require('./utils/config')
 const express = require('express')
+require('express-async-errors')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const app = express()
@@ -30,7 +31,4 @@ app.use('/api/blogs', blogRouter)
 
 app.use(middleware.errorHandler)
 
-const PORT = config.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+module.exports = app
