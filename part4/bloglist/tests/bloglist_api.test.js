@@ -1,13 +1,21 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 const helper = require('./test_helper')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 beforeEach(async () => {
-  await Blog.deleteMany({})
+  // Create a root user
+  await User.deleteMany({})
+  const passwordHash = await bcrypt.hash('sekret', 10)
+  const user = new User({ username: 'root', passwordHash })
+  await user.save()
 
+  // Create blogs without user
+  await Blog.deleteMany({})
   const noteObjects = helper.initialBlogs
     .map(blog => new Blog(blog))
   const promiseArray = noteObjects.map(blog => blog.save())
@@ -23,13 +31,16 @@ describe('Get blog information', () => {
   })
 
   test('there are two blogs', async () => {
-    const response = await api.get('/api/blogs')
+    const response = await api
+                        .get('/api/blogs')
 
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
 
   test('the first blog is about React patterns', async () => {
-    const response = await api.get('/api/blogs')
+    const response = await api
+                      .get('/api/blogs')
+
     const contents = response.body.map(r => r.title)
 
     expect(contents).toContain('React patterns')
