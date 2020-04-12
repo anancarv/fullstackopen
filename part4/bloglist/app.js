@@ -6,7 +6,8 @@ const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
 const logger = require('./utils/logger')
-const blogRouter = require('./controllers/blog')
+const blogRouter = require('./controllers/blogs')
+const usersRouter = require('./controllers/users')
 const middleware = require('./utils/middleware')
 const mongoose = require('mongoose')
 
@@ -28,6 +29,7 @@ app.use(cors())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 app.use('/api/blogs', blogRouter)
+app.use('/api/users', usersRouter)
 
 app.use(middleware.errorHandler)
 
