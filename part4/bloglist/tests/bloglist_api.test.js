@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
 const helper = require('./test_helper')
 const supertest = require('supertest')
 const app = require('../app')
@@ -10,9 +9,6 @@ const User = require('../models/user')
 beforeEach(async () => {
   // Create a root user
   await User.deleteMany({})
-  const passwordHash = await bcrypt.hash('sekret', 10)
-  const user = new User({ username: 'root', passwordHash })
-  await user.save()
 
   // Create blogs without user
   await Blog.deleteMany({})
@@ -23,16 +19,40 @@ beforeEach(async () => {
 })
 
 describe('Get blog information', () => {
+  let headers
+
+  beforeEach(async () => {
+    const newUser = {
+      username: 'root',
+      name: 'root',
+      password: 'password',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+
+    const result = await api
+      .post('/api/login')
+      .send(newUser)
+
+    headers = {
+      'Authorization': `bearer ${result.body.token}`
+    }
+  })
+
   test('blogs are returned as json', async () => {
     await api
       .get('/api/blogs')
       .expect(200)
+      .set(headers)
       .expect('Content-Type', /application\/json/)
   })
 
   test('there are two blogs', async () => {
     const response = await api
                         .get('/api/blogs')
+                        .set(headers)
 
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
@@ -40,6 +60,7 @@ describe('Get blog information', () => {
   test('the first blog is about React patterns', async () => {
     const response = await api
                       .get('/api/blogs')
+                      .set(headers)
 
     const contents = response.body.map(r => r.title)
 
@@ -53,6 +74,28 @@ describe('Get blog information', () => {
 })
 
 describe('Addition of a new blog', () => {
+  let headers
+
+  beforeEach(async () => {
+    const newUser = {
+      username: 'root',
+      name: 'root',
+      password: 'password',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+
+    const result = await api
+      .post('/api/login')
+      .send(newUser)
+
+    headers = {
+      'Authorization': `bearer ${result.body.token}`
+    }
+  })
+
   test('A valid blog can be added ', async () => {
     const newBlog = {
       title:"Canonical string reduction",
@@ -65,6 +108,7 @@ describe('Addition of a new blog', () => {
       .post('/api/blogs')
       .send(newBlog)
       .expect(200)
+      .set(headers)
       .expect('Content-Type', /application\/json/)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -85,6 +129,7 @@ describe('Addition of a new blog', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set(headers)
       .expect(400)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -102,6 +147,7 @@ describe('Addition of a new blog', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set(headers)
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
@@ -111,49 +157,120 @@ describe('Addition of a new blog', () => {
   })
 })
 
-describe('Deletion of a note', () => {
-  test('succeeds with status code 204 if id is valid', async () => {
-    const blogsAtStart = await helper.blogsInDb()
-    const blogToDelete = blogsAtStart[0]
+describe('Update a blog', () => {
+  let headers
+
+  beforeEach(async () => {
+    const newUser = {
+      username: 'root',
+      name: 'root',
+      password: 'password',
+    }
 
     await api
-      .delete(`/api/blogs/${blogToDelete.id}`)
-      .expect(204)
+      .post('/api/users')
+      .send(newUser)
 
-    const blogsAtEnd = await helper.blogsInDb()
+    const result = await api
+      .post('/api/login')
+      .send(newUser)
 
-    expect(blogsAtEnd).toHaveLength(
-      helper.initialBlogs.length - 1
-    )
-
-    const contents = blogsAtEnd.map(r => r.title)
-
-    expect(contents).not.toContain(blogToDelete.title)
+    headers = {
+      'Authorization': `bearer ${result.body.token}`
+    }
   })
-})
 
-describe('Update a blog', () => {
   test('Blog update successful ', async () => {
-    const blogsAtStart = await helper.blogsInDb()
-    const blogToUpdate = blogsAtStart[0]
+
+    const newBlog = {
+      title:"Masterpiece",
+      author:"Edsger W. Dijkstra",
+      url:"http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+      likes:12
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .set(headers)
+      .expect(200)
+
+    const allBlogs = await helper.blogsInDb()
+    const blogToUpdate = allBlogs.find(blog => blog.title === newBlog.title)
 
     const updatedBlog = {
-      title: blogToUpdate.title ,
-      author: blogToUpdate.author,
-      url: blogToUpdate.url,
+      ...blogToUpdate,
       likes: blogToUpdate.likes + 1
     }
 
     await api
       .put(`/api/blogs/${blogToUpdate.id}`)
       .send(updatedBlog)
+      .set(headers)
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
     const blogsAtEnd = await helper.blogsInDb()
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
-    const foundBlog = blogsAtEnd.find(blog => blog.title === "React patterns")
-    expect(foundBlog.likes).toBe(8)
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+    const foundBlog = blogsAtEnd.find(blog => blog.likes === 13)
+    expect(foundBlog.likes).toBe(13)
+  })
+})
+
+describe('Deletion of a blog', () => {
+  let headers
+
+  beforeEach(async () => {
+    const newUser = {
+      username: 'root',
+      name: 'root',
+      password: 'password',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+
+    const result = await api
+      .post('/api/login')
+      .send(newUser)
+
+    headers = {
+      'Authorization': `bearer ${result.body.token}`
+    }
+  })
+
+  test('succeeds with status code 204 if id is valid', async () => {
+    const newBlog = {
+      title:"The best blog ever",
+      author:"Me",
+      url:"http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+      likes:12
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .set(headers)
+      .expect(200)
+
+    const allBlogs = await helper.blogsInDb()
+    const blogToDelete = allBlogs.find(blog => blog.title === newBlog.title)
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set(headers)
+      .expect(204)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd).toHaveLength(
+      helper.initialBlogs.length
+    )
+
+    const contents = blogsAtEnd.map(r => r.title)
+
+    expect(contents).not.toContain(blogToDelete.title)
   })
 })
 
