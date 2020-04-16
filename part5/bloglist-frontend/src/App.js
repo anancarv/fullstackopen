@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -10,12 +11,11 @@ const App = () => {
   const [allBlogs, setAllBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [ newTitle, setNewTitle ] = useState('')
-  const [ newAuthor, setNewAuthor ] = useState('')
-  const [ newUrl, setNewUrl ] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [user, setUser] = useState(null)
+
+  const blogFormRef = React.createRef()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -63,32 +63,11 @@ const App = () => {
     setUser(null)
   }
 
-  const handleTitleChange = (event) => {
-    setNewTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    setNewAuthor(event.target.value)
-  }
-
-  const handleUrlChange = (event) => {
-    setNewUrl(event.target.value)
-  }
-
-  const addBlog = async (event) => {
-    event.preventDefault()
-    const BlogToAdd = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
-    }
-
+  const createBlog = async (BlogToAdd) => {
     try {
-      await blogService
-              .create(BlogToAdd)
-      setNewTitle('')
-      setNewAuthor('')
-      setNewUrl('')
+      blogFormRef.current.toggleVisibility()
+      blogService
+        .create(BlogToAdd)
       setSuccessMessage(
         `Blog ${BlogToAdd.title} was successfully added`
       )
@@ -121,17 +100,12 @@ const App = () => {
           password={password}
         /> :
         <div>
-          <h2>Add new blog</h2>
-          <BlogForm
-            onSubmit={addBlog}
-            newTitle={newTitle}
-            handleTitleChange={handleTitleChange}
-            newAuthor={newAuthor}
-            handleAuthorChange={handleAuthorChange}
-            newUrl={newUrl}
-            handleUrlChange={handleUrlChange}
-          />
           <p>{user.name} logged in<button onClick={handleLogout} type="submit">logout</button></p>
+          <Togglable buttonLabel="Add new blog" ref={blogFormRef}>
+            <BlogForm
+              createBlog={createBlog}
+            />
+          </Togglable>
           {allBlogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
