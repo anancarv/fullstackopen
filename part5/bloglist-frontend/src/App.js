@@ -23,13 +23,13 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
-
       getAllBlogs()
     }
   }, [])
 
   const getAllBlogs = async () => {
     const blogs = await blogService.getAll()
+    blogs.sort((a, b) => (a.likes > b.likes) ? -1 : 1)
     setAllBlogs(blogs)
   }
 
@@ -66,12 +66,12 @@ const App = () => {
   const createBlog = async (BlogToAdd) => {
     try {
       blogFormRef.current.toggleVisibility()
-      blogService
-        .create(BlogToAdd)
+      const createdBlog = await blogService
+                            .create(BlogToAdd)
       setSuccessMessage(
         `Blog ${BlogToAdd.title} was successfully added`
       )
-      getAllBlogs()
+      setAllBlogs(allBlogs.concat(createdBlog))
       setErrorMessage(null)
       setTimeout(() => {
         setSuccessMessage(null)
@@ -79,6 +79,54 @@ const App = () => {
     } catch(exception) {
       setErrorMessage(
         `Cannot add blog ${BlogToAdd.title}`
+      )
+      setSuccessMessage(null)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+    }
+  }
+
+  const updateBlog = async (BlogToUpdate) => {
+    try {
+      const updatedBlog = await blogService
+                      .update(BlogToUpdate)
+      setSuccessMessage(
+        `Blog ${BlogToUpdate.title} was successfully updated`
+      )
+      setAllBlogs(allBlogs.map(blog => blog.id !== BlogToUpdate.id ? blog : updatedBlog))
+      setErrorMessage(null)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+    } catch(exception) {
+      setErrorMessage(
+        `Cannot update blog ${BlogToUpdate.title}`
+      )
+      setSuccessMessage(null)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+    }
+  }
+
+  const deleteBlog = async (BlogToDelete) => {
+    try {
+      if (window.confirm(`Delete ${BlogToDelete.title} ?`)) {
+        blogService
+          .remove(BlogToDelete.id)
+        setSuccessMessage(
+          `Blog ${BlogToDelete.title} was successfully deleted`
+        )
+        setAllBlogs(allBlogs.filter(blog => blog.id !== BlogToDelete.id))
+        setErrorMessage(null)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+      }
+    } catch(exception) {
+      setErrorMessage(
+        `Cannot delete blog ${BlogToDelete.title}`
       )
       setSuccessMessage(null)
       setTimeout(() => {
@@ -107,7 +155,12 @@ const App = () => {
             />
           </Togglable>
           {allBlogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              updateBlog={updateBlog}
+              deleteBlog={deleteBlog}
+            />
           )}
         </div>
       }
