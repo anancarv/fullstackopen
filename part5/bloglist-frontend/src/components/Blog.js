@@ -11,7 +11,7 @@ const Blog = (props) => {
     setVisible(!visible)
   }
 
-  const buttonLabel = visible ? 'hide' : 'view';
+  const buttonLabel = visible ? 'hide' : 'view'
 
   const increaseLikes = () => {
     const updatedBlog = ({

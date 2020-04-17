@@ -67,7 +67,7 @@ const App = () => {
     try {
       blogFormRef.current.toggleVisibility()
       const createdBlog = await blogService
-                            .create(BlogToAdd)
+        .create(BlogToAdd)
       setSuccessMessage(
         `Blog ${BlogToAdd.title} was successfully added`
       )
@@ -90,7 +90,7 @@ const App = () => {
   const updateBlog = async (BlogToUpdate) => {
     try {
       const updatedBlog = await blogService
-                      .update(BlogToUpdate)
+        .update(BlogToUpdate)
       setSuccessMessage(
         `Blog ${BlogToUpdate.title} was successfully updated`
       )
