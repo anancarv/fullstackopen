@@ -10,7 +10,7 @@ test('<BlogForm /> updates parent state and calls onSubmit', () => {
     <BlogForm createBlog={createBlog} />
   )
 
-  const input = component.container.querySelector('input')
+  const input = component.container.querySelector('#title')
   const form = component.container.querySelector('form')
 
   fireEvent.change(input, {
