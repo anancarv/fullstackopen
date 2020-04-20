@@ -39,8 +39,8 @@ const Blog = (props) => {
       </div>
       <div style={showWhenVisible}>
         <p>{blog.url}</p>
-        <p>{ blogObject.likes} <button onClick={increaseLikes}>like</button></p>
-        <button onClick={removeBlog}>remove</button>
+        <p>{ blogObject.likes } <button id='like-button' onClick={increaseLikes}>like</button></p>
+        <button id='remove' onClick={removeBlog}>remove</button>
       </div>
     </div>
   )
