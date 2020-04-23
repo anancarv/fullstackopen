@@ -29,7 +29,6 @@ const App = () => {
 
   const getAllBlogs = async () => {
     const blogs = await blogService.getAll()
-    blogs.sort((a, b) => (a.likes > b.likes) ? -1 : 1)
     setAllBlogs(blogs)
   }
 
@@ -45,7 +44,6 @@ const App = () => {
       )
       setUser(user)
       blogService.setToken(user.token)
-      getAllBlogs()
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -135,6 +133,8 @@ const App = () => {
     }
   }
 
+  const byLikes = (b1, b2) => b2.likes - b1.likes
+
   return (
     <div>
       <h2>Blogs</h2>
@@ -154,7 +154,7 @@ const App = () => {
               createBlog={createBlog}
             />
           </Togglable>
-          {allBlogs.map(blog =>
+          {allBlogs.sort(byLikes).map(blog =>
             <Blog
               key={blog.id}
               blog={blog}
