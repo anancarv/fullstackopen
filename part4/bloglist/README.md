@@ -18,10 +18,13 @@ $ echo "DEV_MONGODB_URI=<YOUR-DEV-MONGODB-URI>" > .env
 # Set a variable SECRET which is a digital signature ensures that only parties who know the secret can generate a valid token.
 $ echo "SECRET=yoursecretphrase" > .env
 
-# Start the application
+# Start the application in dev environment
 $ npm run dev
 
-# To run the tests
+# Start the application in prod environment
+$ npm start
+
+# # Start the application in test environment and run tests
 $ run start:test
 $ npm test
 ```
