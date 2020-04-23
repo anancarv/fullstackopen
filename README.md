@@ -19,3 +19,5 @@ GraphQL, a modern alternative to REST APIs is also covered by this course. As we
 ### [Part 4 - Testing Express servers, user administration](./part4)
 
 ### [Part 5 - Testing React apps](./part5)
+
+### [Part 6 - State management with Redux](./part6)
