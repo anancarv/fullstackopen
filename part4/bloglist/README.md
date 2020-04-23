@@ -22,6 +22,7 @@ $ echo "SECRET=yoursecretphrase" > .env
 $ npm run dev
 
 # To run the tests
+$ run start:test
 $ npm test
 ```
 
