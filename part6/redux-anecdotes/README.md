@@ -9,6 +9,7 @@ To start an application, do the following :
 ```bash
 # Install dependancies
 $ npm install
+
 # Start the application
 $ npm start
 ```
