@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 const CreateNew = (props) => {
@@ -6,14 +7,17 @@ const CreateNew = (props) => {
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const history = useHistory()
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
     props.addNew({
       content,
       author,
       info,
       votes: 0
     })
+    history.push('/')
   }
 
   return (

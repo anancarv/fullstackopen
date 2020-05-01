@@ -6,8 +6,10 @@ import About from './components/About'
 import Footer from './components/Footer'
 import CreateNew from './components/CreateNew'
 import Anecdote from './components/Anecdote'
+import Notification from './components/Notification'
 
 const App = () => {
+  const [notification, setNotification] = useState(null)
   const [anecdotes, setAnecdotes] = useState([
     {
       content: 'If it hurts, do it more often',
@@ -28,6 +30,10 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`${anecdote.content} created successfully !`)
+    setTimeout(() => {
+      setNotification(null)
+    }, 10000)
   }
 
   const match = useRouteMatch('/anecdotes/:id')
@@ -49,6 +55,7 @@ const App = () => {
           <CreateNew addNew={addNew} />
         </Route>
         <Route path="/">
+          <Notification notification={notification} />
           <AnecdoteList anecdotes={anecdotes} />
         </Route>
       </Switch>
