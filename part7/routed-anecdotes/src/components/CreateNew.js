@@ -1,23 +1,31 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
+import  { useField } from '../hooks'
+
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const content = useField('text')
+  const author = useField('text')
+  const info = useField('text')
 
   const history = useHistory()
 
   const handleSubmit = (event) => {
     event.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
     history.push('/')
+  }
+
+  const handleReset = () => {
+    content.reset()
+    author.reset()
+    info.reset()
   }
 
   return (
@@ -27,28 +35,32 @@ const CreateNew = (props) => {
         <div>
           content
           <input
+            type={content.type}
             name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+            value={content.value}
+            onChange={content.onChange}
           />
         </div>
         <div>
           author
           <input
+            type={author.type}
             name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
+            value={author.value}
+            onChange={author.onChange}
           />
         </div>
         <div>
           url for more info
           <input
+            type={info.type}
             name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
+            value={info.value}
+            onChange={info.onChange}
           />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="reset" onClick={handleReset}>reset</button>
       </form>
     </div>
   )
