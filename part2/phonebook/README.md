@@ -20,4 +20,5 @@ $ yarn start
 ```
 
 You can then access the app on : http://localhost:3000/
+
 You can also see the content of the JSON Server by heading to http://localhost:3001/persons
