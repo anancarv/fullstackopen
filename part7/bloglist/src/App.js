@@ -1,17 +1,20 @@
 import React, { useEffect } from 'react'
-import Notification from './components/Notification'
+import { useDispatch, useSelector } from 'react-redux'
+import { Switch, Route, useHistory } from 'react-router-dom'
+import Menu from './components/Menu'
+import UserList from './components/UserList'
 import LoginForm from './components/LoginForm'
 import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
-
-import { useDispatch, useSelector } from 'react-redux'
-import { initializeUser } from './reducers/userReducer'
+import Notification from './components/Notification'
 import { initializeBlogs } from './reducers/blogReducer'
-import { logout } from './reducers/userReducer'
+import { initializeAllUsers } from './reducers/userReducer'
+import { initializeUser, logout } from './reducers/authReducer'
 
 const App = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const user = useSelector((state) => state.user)
 
   const blogFormRef = React.createRef()
@@ -19,34 +22,68 @@ const App = () => {
   useEffect(() => {
     dispatch(initializeUser())
     dispatch(initializeBlogs())
+    dispatch(initializeAllUsers())
   }, [dispatch])
 
   const handleLogout = async (event) => {
     event.preventDefault()
     dispatch(logout())
+    history.push('/')
   }
 
   return (
-    <div>
-      <h2>Blogs</h2>
-      <Notification />
-      {user === null ? (
+    <Switch>
+      <Route path="/blogs">
+        {user === null ? (
+            <div>
+              <Notification />
+              <LoginForm />
+            </div>
+          ) : (
+            <div>
+              <h2>Bloglist</h2>
+              <Notification />
+              <Menu />
+                <p>
+                  {user.name} logged in
+                  <button onClick={handleLogout} type="submit">
+                    logout
+                  </button>
+                </p>
+                <Togglable buttonLabel="Add new blog" ref={blogFormRef}>
+                  <BlogForm />
+                </Togglable>
+                <BlogList />
+            </div>
+          )}
+      </Route>
+      <Route path="/users">
+        {user === null ? (
+          <div>
+            <Notification />
+            <LoginForm />
+          </div>
+        ) : (
+          <div>
+            <h2>Bloglist</h2>
+            <Notification />
+            <Menu />
+              <p>
+                {user.name} logged in
+                <button onClick={handleLogout} type="submit">
+                  logout
+                </button>
+              </p>
+              <h2>Users</h2>
+              <UserList />
+          </div>
+        )}
+      </Route>
+      <Route path="/">
+        <Notification />
         <LoginForm />
-      ) : (
-        <div>
-          <p>
-            {user.name} logged in
-            <button onClick={handleLogout} type="submit">
-              logout
-            </button>
-          </p>
-          <Togglable buttonLabel="Add new blog" ref={blogFormRef}>
-            <BlogForm />
-          </Togglable>
-          <BlogList />
-        </div>
-      )}
-    </div>
+      </Route>
+    </Switch>
   )
 }
 

@@ -1,10 +1,12 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { login } from '../reducers/userReducer'
+import { useHistory } from 'react-router-dom'
+import { login } from '../reducers/authReducer'
 import { initializeBlogs } from '../reducers/blogReducer'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -14,6 +16,7 @@ const LoginForm = () => {
     event.target.password.value = ''
     dispatch(login(username, password))
     dispatch(initializeBlogs())
+    history.push('/blogs')
   }
 
   return (

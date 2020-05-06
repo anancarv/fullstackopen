@@ -1,66 +1,20 @@
-import blogService from '../services/blogs'
-import loginService from '../services/login'
-import { setNotification } from '../reducers/notificationReducer'
+import userService from '../services/users'
 
-const userReducer = (state = null, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
-
+const userReducer = (state = [], action) => {
   switch (action.type) {
-    case 'INIT_USER':
-      return action.user
-    case 'LOGIN':
-      return action.user
-    case 'LOGOUT':
-      return action.user
+    case 'INIT_ALL_USERS':
+      return action.data
     default:
       return state
   }
 }
 
-export const initializeUser = () => {
-  const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-  if (loggedUserJSON) {
-    const user = JSON.parse(loggedUserJSON)
-    blogService.setToken(user.token)
-    return {
-      type: 'INIT_USER',
-      user: user
-    }
-  }
-
-  return {
-    type: 'INIT_USER',
-    user: null
-  }
-}
-
-export const login = (username, password) => {
+export const initializeAllUsers = () => {
   return async (dispatch) => {
-    try {
-      const user = await loginService.login({
-        username,
-        password
-      })
-
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      dispatch({
-        type: 'LOGIN',
-        user: user
-      })
-    } catch (exception) {
-      dispatch(setNotification('wrong credentials', 'error', 5))
-    }
-  }
-}
-
-export const logout = () => {
-  return async (dispatch) => {
-    window.localStorage.removeItem('loggedBlogappUser')
+    const users = await userService.getAll()
     dispatch({
-      type: 'LOGOUT',
-      user: null
+      type: 'INIT_ALL_USERS',
+      data: users
     })
   }
 }

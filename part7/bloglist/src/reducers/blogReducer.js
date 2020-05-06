@@ -2,9 +2,6 @@ import blogService from '../services/blogs'
 import { setNotification } from '../reducers/notificationReducer'
 
 const blogReducer = (state = [], action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
-
   switch (action.type) {
     case 'INIT_BLOGS':
       return action.data
