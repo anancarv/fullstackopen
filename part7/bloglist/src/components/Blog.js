@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { like, deleteBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { Link } from 'react-router-dom'
+import { Button } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog }) => {
@@ -30,35 +31,31 @@ const Blog = ({ blog }) => {
     )
   }
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
   return (
-    <div style={blogStyle} className="blog">
-      <div>
-        <p>
-        <Link to={`/blogs/${blog.id}`}>{blog.title} - {blog.author}</Link>{' '}
-          <button onClick={toggleVisibility}>{buttonLabel}</button>
-        </p>
-      </div>
-      <div style={showWhenVisible}>
-        <p>{blog.url}</p>
-        <p>
-          {blog.likes}{' '}
-          <button id="like-button" onClick={increaseLikes}>
-            like
-          </button>
-        </p>
-        <button id="remove" onClick={removeBlog}>
-          remove
-        </button>
-      </div>
-    </div>
+    <tr>
+      <td>
+        <div className="blog">
+          <div>
+            <p>
+            <Link to={`/blogs/${blog.id}`}>{blog.title} - {blog.author}</Link>{' '}
+              <Button variant="primary" onClick={toggleVisibility}>{buttonLabel}</Button>
+            </p>
+          </div>
+          <div style={showWhenVisible}>
+            <p>{blog.url}</p>
+            <p>
+              {blog.likes}{' '}
+              <Button variant="primary" id="like-button" onClick={increaseLikes}>
+                like
+              </Button>
+            </p>
+            <Button variant="danger" id="remove" onClick={removeBlog}>
+              remove
+            </Button>
+          </div>
+        </div>
+      </td>
+    </tr>
   )
 }
 

@@ -21,11 +21,16 @@ blogRouter.post('/', async (request, response, next) => {
         body.likes = 0
     }
 
+    if (!body.comments) {
+        body.comments = []
+    }
+
     const blog = new Blog({
         title: body.title,
         author: body.author,
         url: body.url,
         likes: body.likes,
+        comments: body.comments,
         user: user._id
     })
 
@@ -68,6 +73,10 @@ blogRouter.put('/:id', async (request, response, next) => {
         body.likes = 0
     }
 
+    if (!body.comments) {
+        body.comments = []
+    }
+
     const token = request.token
     const decodedToken = jwt.verify(token, process.env.SECRET)
     const user = await User.findById(decodedToken.id)
@@ -79,7 +88,8 @@ blogRouter.put('/:id', async (request, response, next) => {
             title: body.title,
             author: body.author,
             url: body.url,
-            likes: body.likes
+            likes: body.likes,
+            comments: body.comments,
         }
 
         try {

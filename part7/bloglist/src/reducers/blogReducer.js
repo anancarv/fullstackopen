@@ -18,6 +18,14 @@ const blogReducer = (state = [], action) => {
       }
       return state.map((blog) => (blog.id !== id ? blog : changedBlog))
     }
+    case 'COMMENT':
+      const id = action.data.id
+      const updatedBlog = state.find((blog) => blog.id === id)
+      const changedBlog = {
+        ...updatedBlog,
+        comments: action.data.comments
+      }
+      return state.map((blog) => (blog.id !== id ? blog : changedBlog))
     default:
       return state
   }
@@ -73,6 +81,23 @@ export const like = (blog) => {
       })
       dispatch({
         type: 'LIKE',
+        data: updatedBlog
+      })
+    } catch (exception) {
+      dispatch(setNotification(`cannot update blog ${blog.title}`, 'error', 5))
+    }
+  }
+}
+
+export const comment = (blog, comment) => {
+  return async (dispatch) => {
+    try {
+      const updatedBlog = await blogService.update({
+        ...blog,
+        comments: blog.comments.concat([comment])
+      })
+      dispatch({
+        type: 'COMMENT',
         data: updatedBlog
       })
     } catch (exception) {

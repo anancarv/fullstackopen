@@ -2,6 +2,8 @@ import React from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout } from '../reducers/authReducer'
+import { Button } from 'react-bootstrap'
+import { Navbar, Nav } from 'react-bootstrap'
 
 const Menu = () => {
   const dispatch = useDispatch()
@@ -9,16 +11,12 @@ const Menu = () => {
   const user = useSelector((state) => state.user)
 
   const padding = {
-    paddingRight: 5
+    padding: 5
   }
 
   const style = {
-    background: 'lightgrey',
-    font_size: 20,
-    border_style: 'solid',
-    border_radius: 5,
-    padding: 10,
-    margin_bottom: 10
+    padding: 5,
+    color: 'white'
   }
 
   const handleLogout = async (event) => {
@@ -28,18 +26,23 @@ const Menu = () => {
   }
 
   return (
-    <div style={style}>
-      <Link to="/blogs" style={padding}>
-        blogs
-      </Link>
-      <Link to="/users" style={padding}>
-        users
-      </Link>
-      {user.name} logged in {' '}
-      <button onClick={handleLogout} type="submit">
-        logout
-      </button>
-    </div>
+    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+      <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+      <Navbar.Collapse id="responsive-navbar-nav">
+        <Nav className="mr-auto">
+          <Nav.Link href="#" as="span">
+            <Link style={padding} to="/blogs">blogs</Link>
+          </Nav.Link>
+          <Nav.Link href="#" as="span">
+            <Link style={padding} to="/users">users</Link>
+          </Nav.Link>
+          <span style={style}>{user.name} logged in {' '}</span>
+          <Button variant="danger" onClick={handleLogout} type="submit">
+            logout
+          </Button>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
   )
 }
 
