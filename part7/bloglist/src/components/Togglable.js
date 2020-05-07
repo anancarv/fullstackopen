@@ -4,8 +4,8 @@ import PropTypes from 'prop-types'
 const Togglable = React.forwardRef((props, ref) => {
   const [visible, setVisible] = useState(false)
 
-  const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
+  const hideWhenVisible = { display: visible ? 'none' : '', paddingBottom: 5 }
+  const showWhenVisible = { display: visible ? '' : 'none', paddingBottom: 5 }
 
   const toggleVisibility = () => {
     setVisible(!visible)

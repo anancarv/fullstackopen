@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { like, deleteBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog }) => {
@@ -41,7 +42,7 @@ const Blog = ({ blog }) => {
     <div style={blogStyle} className="blog">
       <div>
         <p>
-          {blog.title} - {blog.author}{' '}
+        <Link to={`/blogs/${blog.id}`}>{blog.title} - {blog.author}</Link>{' '}
           <button onClick={toggleVisibility}>{buttonLabel}</button>
         </p>
       </div>

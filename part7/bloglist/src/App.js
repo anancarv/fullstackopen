@@ -1,21 +1,24 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Switch, Route, useHistory } from 'react-router-dom'
-import Menu from './components/Menu'
+import { Switch, Route, useRouteMatch } from 'react-router-dom'
+import Header from './components/Header'
 import UserList from './components/UserList'
 import LoginForm from './components/LoginForm'
+import Blog from './components/Blog'
 import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
-import { initializeBlogs } from './reducers/blogReducer'
+import { initializeBlogs, like } from './reducers/blogReducer'
 import { initializeAllUsers } from './reducers/userReducer'
-import { initializeUser, logout } from './reducers/authReducer'
+import { initializeUser } from './reducers/authReducer'
+import { setNotification } from './reducers/notificationReducer'
 
 const App = () => {
   const dispatch = useDispatch()
-  const history = useHistory()
   const user = useSelector((state) => state.user)
+  const users = useSelector((state) => state.users)
+  const blogs = useSelector((state) => state.blog)
 
   const blogFormRef = React.createRef()
 
@@ -25,14 +28,77 @@ const App = () => {
     dispatch(initializeAllUsers())
   }, [dispatch])
 
-  const handleLogout = async (event) => {
-    event.preventDefault()
-    dispatch(logout())
-    history.push('/')
+  const userMatch = useRouteMatch('/users/:id')
+  const foundUser = userMatch
+    ? users.find((user) => user.id === userMatch.params.id)
+    : null
+
+  const blogMatch = useRouteMatch('/blogs/:id')
+  const foundBlog = blogMatch
+    ? blogs.find((blog) => blog.id === blogMatch.params.id)
+    : null
+
+  const handleLikes = (blogToLike) => {
+    dispatch(like(blogToLike))
+    dispatch(
+      setNotification(`Blog ${blogToLike.title} successfully updated`, 'success', 5)
+    )
   }
 
   return (
     <Switch>
+      <Route path="/users/:id">
+        {user === null ? (
+            <div>
+              <Notification />
+              <LoginForm />
+            </div>
+          ) : (
+            <div>
+              <Header />
+              <h2>Bloglist</h2>
+              <Notification />
+                <h2>{user.name}</h2>
+                <h3>Added blogs</h3>
+                {!foundUser ? (
+                  null
+                ) : (
+                  <div>
+                    {foundUser.blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
+                  </div>
+                )}
+            </div>
+        )}
+      </Route>
+      <Route path="/blogs/:id">
+        {user === null ? (
+            <div>
+              <Notification />
+              <LoginForm />
+            </div>
+          ) : (
+            <div>
+              <Header />
+              <h2>Bloglist</h2>
+              <Notification />
+                {!foundBlog ? (
+                  null
+                ) : (
+                  <div>
+                    <h2>{foundBlog.title}</h2>
+                    <p>{foundBlog.url}</p>
+                    <p>
+                      {foundBlog.likes}{' '}
+                      <button onClick={() => handleLikes(foundBlog)}>
+                        like
+                      </button>
+                    </p>
+                    <p>added by {foundBlog.author}</p>
+                  </div>
+                )}
+            </div>
+        )}
+      </Route>
       <Route path="/blogs">
         {user === null ? (
             <div>
@@ -41,15 +107,9 @@ const App = () => {
             </div>
           ) : (
             <div>
+              <Header />
               <h2>Bloglist</h2>
               <Notification />
-              <Menu />
-                <p>
-                  {user.name} logged in
-                  <button onClick={handleLogout} type="submit">
-                    logout
-                  </button>
-                </p>
                 <Togglable buttonLabel="Add new blog" ref={blogFormRef}>
                   <BlogForm />
                 </Togglable>
@@ -65,15 +125,9 @@ const App = () => {
           </div>
         ) : (
           <div>
+            <Header />
             <h2>Bloglist</h2>
             <Notification />
-            <Menu />
-              <p>
-                {user.name} logged in
-                <button onClick={handleLogout} type="submit">
-                  logout
-                </button>
-              </p>
               <h2>Users</h2>
               <UserList />
           </div>

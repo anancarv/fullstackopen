@@ -1,10 +1,11 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 const User = ({ user }) => {
   return (
   <div>
-    {user.name} has {user.blogs.length} blogs
+    <Link to={`/users/${user.id}`}>{user.name}</Link> has {user.blogs.length} blogs
   </div>
   )
 }
