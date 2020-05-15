@@ -9,13 +9,13 @@ patientRouter.get('/', (_req, res) => {
 });
 
 patientRouter.post('/', (req, res) => {
-    try {
-        const newDiaryEntry = toNewPatientEntry(req.body);
-        const addedEntry = patientService.addPatient(newDiaryEntry);
-        res.json(addedEntry);
-    } catch (e) {
-        res.status(400).send({"error": e.message});
-    }
+  try {
+    const newDiaryEntry = toNewPatientEntry(req.body);
+    const addedEntry = patientService.addPatient(newDiaryEntry);
+    res.json(addedEntry);
+  } catch (e) {
+    res.status(400).send({ error: e.message });
+  }
 });
 
 export default patientRouter;
