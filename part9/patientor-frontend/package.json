@@ -21,6 +21,7 @@
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "eslint-config-react": "^1.1.7",
+    "prettier": "2.0.5",
     "react-scripts": "3.3.0",
     "typescript": "^3.9.2"
   },
@@ -30,6 +31,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint './src/**/*.{ts,tsx}'",
+    "format": "prettier --write './src/**/*.{ts,tsx}'",
     "lint:fix": "eslint './src/**/*.{ts,tsx}' --fix"
   },
   "browserslist": {
