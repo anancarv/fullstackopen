@@ -11,9 +11,9 @@ export type Action =
       payload: Patient;
     }
   | {
-    type: 'SET_DIAGNOSES_LIST';
-    payload: Diagnosis[];
-  };
+      type: 'SET_DIAGNOSES_LIST';
+      payload: Diagnosis[];
+    };
 
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -39,14 +39,14 @@ export const reducer = (state: State, action: Action): State => {
           ...state.diagnoses
         }
       };
-      case 'ADD_PATIENT':
-        return {
-          ...state,
-          patients: {
-            ...state.patients,
-            [action.payload.id]: action.payload
-          }
-        };
+    case 'ADD_PATIENT':
+      return {
+        ...state,
+        patients: {
+          ...state.patients,
+          [action.payload.id]: action.payload
+        }
+      };
     default:
       return state;
   }

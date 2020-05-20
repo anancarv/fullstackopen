@@ -1,14 +1,37 @@
 import React from 'react';
+import { Patient, Entry } from '../types';
 import { Icon } from 'semantic-ui-react';
 
 import { useParams } from 'react-router-dom';
 import { useStateValue } from '../state';
-import { Patient } from '../types';
+
+import Hospital from './Hospital';
+import HealthCheck from './HealthCheck';
+import OccupationalHealthcare from './OccupationalHealthcare';
+
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+  );
+};
+
+const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
+  switch (entry.type) {
+    case 'Hospital':
+      return <Hospital entry={entry} />;
+    case 'OccupationalHealthcare':
+      return <OccupationalHealthcare entry={entry} />;
+    case 'HealthCheck':
+      return <HealthCheck entry={entry} />;
+    default:
+      return assertNever(entry);
+  }
+};
 
 const PatientPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [{ patients }] = useStateValue();
-  const [{ diagnoses },] = useStateValue();
+  const [{ diagnoses }] = useStateValue();
 
   const patient = Object.values(patients).find(
     (patient: Patient) => patient.id === id
@@ -17,21 +40,21 @@ const PatientPage: React.FC = () => {
   let iconName: 'man' | 'woman' | 'genderless';
 
   if (patient) {
-    switch(patient.gender) {
+    switch (patient.gender) {
       case 'male':
-        iconName = 'man'
+        iconName = 'man';
         break;
       case 'female':
-        iconName = 'woman'
+        iconName = 'woman';
         break;
       case 'other':
-        iconName = 'genderless'
+        iconName = 'genderless';
         break;
       default:
-        iconName = 'woman'
+        iconName = 'woman';
     }
 
-    return  (
+    return (
       <div>
         <h2>
           {patient.name} <Icon name={iconName} />{' '}
@@ -39,20 +62,16 @@ const PatientPage: React.FC = () => {
         <p>ssh: {patient.ssn}</p>
         <p>occupation: {patient.occupation}</p>
         <h3>entries</h3>
-          {patient.entries.map((entry, i) =>
-            <div key={i}>
-              <p>{entry.date}: {entry.description} </p>
-              <ul>
-                { Object.keys(diagnoses).length === 0 ? (
-                      null
-                    ) : (
-                      entry.diagnosisCodes?.map((code, i) => <li key={i}> {code}: {diagnoses[code].name} </li>))}
-              </ul>
-            </div>
-          )}
+        {patient.entries.map((entry, i) => (
+          <div key={i}>
+            {Object.keys(diagnoses).length === 0 ? null : (
+              <EntryDetails entry={entry} />
+            )}
+          </div>
+        ))}
       </div>
     );
-  };
+  }
 
   return null;
 };
