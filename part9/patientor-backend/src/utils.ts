@@ -54,7 +54,7 @@ const parseGender = (gender: any): Gender => {
 
 const parseEntries = (entries: any): Entry[] => {
   if (!entries) {
-    throw new Error(`Incorrect or missing gender: ${entries}`);
+    throw new Error(`Incorrect or missing entries: ${entries}`);
   }
   return entries;
 };

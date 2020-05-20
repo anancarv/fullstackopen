@@ -8,11 +8,9 @@ patientRouter.get('/', (_req, res) => {
   res.send(patientService.getAll());
 });
 
-
 patientRouter.get('/:patientId', (req, res) => {
   res.send(patientService.getOne(req.params.patientId));
 });
-
 
 patientRouter.post('/', (req, res) => {
   try {
