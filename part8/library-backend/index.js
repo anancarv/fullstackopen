@@ -80,7 +80,8 @@ let books = [
   },
 ]
 
-const typeDefs = gql`
+// Contains the GraphQL schema
+const typeDefs = gql`  
   type Author {
     name: String!
     born: Int 
@@ -117,8 +118,9 @@ const typeDefs = gql`
   }
 `
 
-const resolvers = {
-  Query: {
+// Resolvers define how GraphQL queries are responded to
+const resolvers = { 
+  Query: {                              // Correspond to the queries described in the schema
     authorCount: () => authors.length,
     bookCount: () => books.length,
     allBooks: (root, args) => {
@@ -147,6 +149,7 @@ const resolvers = {
     }
   },
 
+  // In GraphQL, all operations which cause a change are done with mutations.
   Mutation: {
     addBook: (root, args) => {
       const book = { ...args, id: uuid() }
