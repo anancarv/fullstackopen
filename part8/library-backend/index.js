@@ -95,18 +95,19 @@ const resolvers = {
         const foundAuthor = await Author.findOne({ name: args.author })
         if (foundAuthor) {
           if (args.genre) {
-            return await Book.find({ author: foundAuthor.id, genres: { $in: [args.genre] } })
+            return await Book.find({ author: foundAuthor.id, genres: { $in: [args.genre] } }).populate('author')
           }
-          return await Book.find({ author: foundAuthor.id })
+          return  await Book.find({ author: foundAuthor.id }).populate('author')
         }
         return null
       }
 
       if (args.genre) {
-        return Book.find({ genres: { $in: [args.genre] } })
+        return Book.find({ genres: { $in: [args.genre] } }).populate('author')
       }
 
-      return await Book.find({})
+      return Book.find({}).populate('author')
+
     },
     allAuthors: async () => await Author.find({}),
     me: (root, args, context) => {
